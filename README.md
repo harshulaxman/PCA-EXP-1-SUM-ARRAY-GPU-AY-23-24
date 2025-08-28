@@ -30,8 +30,21 @@ Google Colab with NVCC Compiler
 
 ## PROGRAM:
 ```
+%%cuda
 #include <cuda_runtime.h>
 #include <stdio.h>
+#include <sys/time.h>
+
+#define CHECK(call)                                                      \
+{                                                                        \
+    cudaError_t err = call;                                              \
+    if (err != cudaSuccess) {                                            \
+        fprintf(stderr, "CUDA error at %s %d: %s\n",                     \
+                __FILE__, __LINE__, cudaGetErrorString(err));            \
+        exit(EXIT_FAILURE);                                              \
+    }                                                                    \
+}
+
 
 void checkResult(float *hostRef, float *gpuRef, const int N)
 {
@@ -83,6 +96,11 @@ __global__ void sumArraysOnGPU(float *A, float *B, float *C, const int N){
     if (i<N) C[i] = A[i] + B[i];
 }
 
+double seconds() {
+struct timeval tp;
+gettimeofday(&tp,NULL);
+return ((double)tp.tv_sec + (double)tp.tv_usec*1.e-6);
+}
 
 
 int main(int argc, char **argv)
@@ -174,11 +192,8 @@ int main(int argc, char **argv)
 ```
 
 ## OUTPUT:
-![image](https://github.com/22002102/PCA-EXP-1-SUM-ARRAY-GPU-AY-23-24/assets/119091638/400a98b6-0584-4e5e-9972-4894d85e695f)
-### blocksize=1203
-![image](https://github.com/22002102/PCA-EXP-1-SUM-ARRAY-GPU-AY-23-24/assets/119091638/ba58a014-5d4b-4cff-b9c9-48fa880a11c6)
-### blocksize=256
-![image](https://github.com/22002102/PCA-EXP-1-SUM-ARRAY-GPU-AY-23-24/assets/119091638/9e347879-05a6-43f0-a894-69173b0165e4)
+
+<img width="1324" height="149" alt="image" src="https://github.com/user-attachments/assets/c3295626-eb6f-4cc2-a478-a03e1adc579f" />
 
 
 ## RESULT:
